@@ -1,0 +1,8 @@
+A Scala Specs2 extension for testing XSLT with XSpec.
+
+License
+-------
+
+Licensed under the MIT License (for compatibility with XSpec).
+
+See http://www.opensource.org/licenses/mit-license.php

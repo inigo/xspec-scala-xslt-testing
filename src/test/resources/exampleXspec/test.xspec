@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+               xmlns:myfn="http://surguy.net/xslt/functions"
+               stylesheet="test.xsl">
+
+    <x:scenario label="identity transforms">
+        <x:scenario label="for simple elements">
+            <x:context>
+                <lalala/>
+                <hahaha/>
+            </x:context>
+            <x:expect label="should produce the same output">
+                <lalala/>
+                <hahaha/>
+            </x:expect>
+        </x:scenario>
+        <x:scenario label="when checking XSpec">
+            <x:context>
+                <lalala/>
+            </x:context>
+            <x:expect label="will produce a failure if the output is wrong">
+                <nonono/>
+            </x:expect>
+        </x:scenario>
+    </x:scenario>
+
+    <x:scenario label="calling functions">
+        <x:call function="myfn:hello">
+            <x:param select="'world'" />
+        </x:call>
+        <x:expect label="should say hello" select="'Hello world'" />
+    </x:scenario>
+
+    <x:scenario label="calling functions that fail">
+        <x:call function="myfn:hello">
+            <x:param select="'world'" />
+        </x:call>
+        <x:expect label="should produce a failure" select="'Not hello world'" />
+    </x:scenario>
+
+    <x:scenario label="expectations using an XPath">
+        <x:context>
+            <lalala value="someThing" />
+        </x:context>
+        <x:expect label="should match that XPath" test="lalala/@value = 'someThing'" />
+    </x:scenario>
+
+    <x:scenario label="nested scenarios">
+        <x:scenario label="can be nested">
+            <x:scenario label="quite deeply">
+                <x:scenario label="expectations using an XPath">
+                    <x:context>
+                        <lalala value="someThing" />
+                    </x:context>
+                    <x:expect label="should fail to match that XPath" test="lalala/@value = 'notThatSomeThing'" />
+                </x:scenario>
+            </x:scenario>
+        </x:scenario>
+    </x:scenario>
+
+</x:description>

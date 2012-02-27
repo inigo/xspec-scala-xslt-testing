@@ -1,0 +1,41 @@
+<x:report date="2012-02-25T22:12:09.713Z" stylesheet="file:/Users/inigosurguy/Git/doc-to-html/src/main/resources/xsl/ooxml-to-xhtml.xsl" xmlns:impl="urn:x-xspec:compile:xslt:impl" xmlns:pkg="http://expath.org/ns/pkg" xmlns:x="http://www.jenitennison.com/xslt/xspec" xmlns:test="http://www.jenitennison.com/xslt/unit-test" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+    <x:scenario>
+        <x:label>identity transforms</x:label>
+        <x:scenario>
+            <x:label>for simple elements</x:label>
+            <x:context>
+                <lalala></lalala>
+            </x:context>
+            <x:result>
+                <lalala></lalala>
+            </x:result>
+            <x:test successful="true">
+                <x:label>should produce the same output</x:label>
+                <x:result>
+                    <lalala></lalala>
+                </x:result>
+                <x:expect>
+                    <lalala></lalala>
+                </x:expect>
+            </x:test>
+        </x:scenario>
+        <x:scenario>
+            <x:label>when checking XSpec</x:label>
+            <x:context>
+                <lalala></lalala>
+            </x:context>
+            <x:result>
+                <lalala></lalala>
+            </x:result>
+            <x:test successful="false">
+                <x:label>will produce a failure if the output is wrong</x:label>
+                <x:result>
+                    <lalala></lalala>
+                </x:result>
+                <x:expect>
+                    <nonono></nonono>
+                </x:expect>
+            </x:test>
+        </x:scenario>
+    </x:scenario>
+</x:report>
