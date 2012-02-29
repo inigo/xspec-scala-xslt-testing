@@ -60,18 +60,18 @@ object XspecRunner {
     tFactory.newTemplates(new StreamSource(xslt, fileName))
   }
 
-  private[xspec] def parseResults(xspecResult: Elem): XspecResult = XspecResult(parseScenarios(xspecResult))
+  private[xspec] def parseResults(xspecResult: Elem): XspecResult = XspecResult(parseScenarios(xspecResult, ""))
 
-  private def parseScenarios(elem: Node): Seq[Scenario] = {
+  private def parseScenarios(elem: Node, labelSoFar: String): Seq[Scenario] = {
     for (scenarioNode <- elem \ "scenario";
          label <- scenarioNode \ "label";
-         scenarios = parseScenarios(scenarioNode);
-         result = parseResults(scenarioNode)) yield {
+         scenarios = parseScenarios(scenarioNode, labelSoFar+" "+label.text);
+         result = parseResults(scenarioNode, labelSoFar+" "+label.text)) yield {
       Scenario(label.text, scenarios, result)
     }
   }
 
-  private def parseResults(elem: Node): Option[XspecTest] = {
+  private def parseResults(elem: Node, labelSoFar: String): Option[XspecTest] = {
     (for (result <- elem \ "test";
           success <- result \ "@successful";
           label <- result \ "label";
@@ -79,7 +79,7 @@ object XspecRunner {
           actual <- result \ "result") yield {
       val expectChild = (expect \ "_").collect{ case e: Elem => e.copy( scope = TopScope ) }
       val actualChild = (actual \ "_").collect{ case e: Elem => e.copy( scope = TopScope ) }
-      XspecTest(label.text, success.text.toBoolean, expectChild , actualChild )
+      XspecTest((labelSoFar + " " + label.text).trim, success.text.toBoolean, expectChild , actualChild )
     }).headOption
   }
 

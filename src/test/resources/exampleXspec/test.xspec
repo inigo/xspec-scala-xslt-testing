@@ -46,9 +46,9 @@
     </x:scenario>
 
     <x:scenario label="nested scenarios">
-        <x:scenario label="can be nested">
+        <x:scenario label="that can be nested">
             <x:scenario label="quite deeply">
-                <x:scenario label="expectations using an XPath">
+                <x:scenario label="with expectations using an XPath">
                     <x:context>
                         <lalala value="someThing" />
                     </x:context>
