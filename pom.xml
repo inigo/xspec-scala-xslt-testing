@@ -11,15 +11,15 @@
 
     <properties>
         <encoding>UTF-8</encoding>
-        <scala.version>2.9.1</scala.version>
+        <scala.version>2.9.2</scala.version>
     </properties>
 
     <dependencies>
         <!-- Saxon for XSLT - an older version, since recent versions aren't in any public Maven repo -->
         <dependency>
             <groupId>net.sourceforge.saxon</groupId>
-            <artifactId>saxon</artifactId>
-            <version>9.1.0.8</version>
+            <artifactId>saxonhe</artifactId>
+            <version>9.2.1.1</version>
         </dependency>
 
         <!-- Scala library -->
@@ -32,8 +32,8 @@
         <!-- Specs2 - used for the code itself, as well as for testing it -->
         <dependency>
             <groupId>org.specs2</groupId>
-            <artifactId>specs2_2.9.1</artifactId>
-            <version>1.7.1</version>
+            <artifactId>specs2_2.9.2</artifactId>
+            <version>1.11</version>
         </dependency>
 
         <!-- JUnit used to allow the tests to be run from Maven for deployment to Sonatype -->
