@@ -4,12 +4,14 @@ import org.specs2.mutable.Specification
 import org.specs2.specification.Fragments
 import java.io.File
 
+import org.specs2.matcher.XmlMatchers
+
 /**
  * A trait for XSpec tests - extend and implement the xSpec method.
  *
  * @author Inigo Surguy
  */
-abstract class XspecSpecification extends Specification {
+abstract class XspecSpecification extends Specification with XmlMatchers {
   def xSpec: File
 
   override def is: Fragments = {
