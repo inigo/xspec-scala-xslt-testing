@@ -25,13 +25,13 @@ Reference this library in your Maven POM:
   <dependency>
     <groupId>net.surguy</groupId>
     <artifactId>specs2-xspec</artifactId>
-    <version>0.1</version>
+    <version>0.3_2.11</version>
     <scope>test</scope>
   </dependency>
 
 or in your SBT build script:
 
-  libraryDependencies ++= Seq("net.surguy" %% "specs2-xspec" % "0.1" % "test")
+  libraryDependencies ++= Seq("net.surguy" %% "specs2-xspec" % "0.3" % "test")
 
 Create a Scala Specs2 specification extending XspecSpecification:
 
@@ -59,7 +59,7 @@ the Specs2 code by Eric Torreborre available at
 https://github.com/etorreborre/specs2 and licensed under an MIT license. Both
 of these are referenced from the POM.
 
-This code is built against specs2_2.9.1. If you're using a different version
+This code is built against specs2 2.5 2_11. If you're using a different version
 of Specs2, it may or may not work.
 
 By default, the POM references a fairly old version of Saxon - 9.1.0.8 -
