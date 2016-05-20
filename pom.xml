@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.surguy</groupId>
     <artifactId>specs2-xspec</artifactId>
-    <version>0.3_2.11-SNAPSHOT</version>
+    <version>0.5_2.11-SNAPSHOT</version>
     <name>specs2-xspec</name>
     <description>A Scala Specs2 extension for testing XSLT with XSpec</description>
     <url>https://github.com/inigo/xspec-scala-xslt-testing</url>
