@@ -39,7 +39,7 @@ object XspecRunner {
     // The XSpec file itself specifies the stylesheet that it should be applied to, via the stylesheet attribute
 
     val tFactory = new TransformerFactoryImpl()
-    tFactory.setURIResolver(new ClasspathUriResolver())
+    tFactory.setURIResolver(ClasspathUriResolver)
     val transformer: net.sf.saxon.jaxp.TransformerImpl =
       tFactory.newTransformer(new StreamSource(new ByteArrayInputStream(xspecStylesheet))).asInstanceOf[net.sf.saxon.jaxp.TransformerImpl]
     transformer.setInitialTemplate("{http://www.jenitennison.com/xslt/xspec}main")
@@ -56,8 +56,7 @@ object XspecRunner {
     if (xslt == null) {
       throw new FileNotFoundException("Cannot find XSLT on classpath : " + compileXsltTests)
     }
-    val uriResolver = new ClasspathUriResolver()
-    tFactory.setURIResolver(uriResolver)
+    tFactory.setURIResolver(ClasspathUriResolver)
     tFactory.newTemplates(new StreamSource(xslt, compileXsltTests))
   }
 

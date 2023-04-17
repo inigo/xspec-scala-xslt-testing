@@ -10,9 +10,12 @@ import javax.xml.transform.stream.StreamSource
  *
  * @author Inigo Surguy
  */
-private[xspec] class ClasspathUriResolver extends URIResolver {
+private[xspec] object ClasspathUriResolver extends URIResolver {
   def resolve(href: String, base: String): Source = {
-    val uri = new URI(base).resolve(href)
+    resolve(new URI(base).resolve(href))
+  }
+
+  def resolve(uri: URI) = {
     val correctedUri = if (uri.toString.startsWith("file:")) uri.toString.substring(5) else uri.toString
     val input = this.getClass.getResourceAsStream(correctedUri)
     if (input != null) new StreamSource(input, correctedUri) else null
