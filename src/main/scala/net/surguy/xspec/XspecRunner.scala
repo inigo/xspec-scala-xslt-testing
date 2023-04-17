@@ -18,7 +18,9 @@ object XspecRunner {
   // anywhere in the XSpec result XML where it will be picked up incorrectly.
   val xspecNs = "{http://www.jenitennison.com/xslt/xspec}"
 
-  val xspecGenerator = getTemplates("/xspec/compiler/generate-xspec-tests.xsl")
+  val compileXsltTests = "/io/xspec/xspec/impl/src/compiler/compile-xslt-tests.xsl"
+
+  private lazy val xspecGenerator = getTemplates
 
   def runTest(specFile: File): XspecResult = {
     if (!specFile.exists()) {
@@ -27,9 +29,9 @@ object XspecRunner {
 
     val dir = Utils.createTempDir()
     try {
-      // XSpec is a two-stage transform, like Schematron. 
+      // XSpec is a two-stage transform, like Schematron.
       // First it creates a XSpec stylesheet from the test file, then it calls templates in that stylesheet
-      
+
       // First, generate the XSpec stylesheet:
       val xspecFile = new File(dir, "xspec.xsl")
       xspecGenerator.newTransformer().transform(new StreamSource(specFile), new StreamResult(xspecFile))
@@ -49,16 +51,16 @@ object XspecRunner {
       Utils.deleteRecursively(dir)
     }
   }
-  
-  private def getTemplates(fileName: String): Templates = {
+
+  private def getTemplates: Templates = {
     val tFactory = new TransformerFactoryImpl()
-    val xslt = XspecRunner.getClass.getResourceAsStream(fileName)
+    val xslt = XspecRunner.getClass.getResourceAsStream(compileXsltTests)
     if (xslt == null) {
-      throw new FileNotFoundException("Cannot find XSLT on classpath : " + fileName)
+      throw new FileNotFoundException("Cannot find XSLT on classpath : " + compileXsltTests)
     }
     val uriResolver = new ClasspathUriResolver()
     tFactory.setURIResolver(uriResolver)
-    tFactory.newTemplates(new StreamSource(xslt, fileName))
+    tFactory.newTemplates(new StreamSource(xslt, compileXsltTests))
   }
 
   private[xspec] def parseResults(xspecResult: Elem): XspecResult = XspecResult(parseScenarios(xspecResult, ""))

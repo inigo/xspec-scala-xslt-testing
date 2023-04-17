@@ -16,7 +16,7 @@ lazy val root = (project in file("."))
     name := "specs2-xspec",
     crossScalaVersions := supportedScalaVersions,
     libraryDependencies ++= Seq(
-      "net.sf.saxon" % "Saxon-HE" % "9.8.0-15",
+      "io.xspec" % "xspec" % "2.2.4",
       "org.specs2" %% "specs2-core" % "4.20.0",
       "org.specs2" %% "specs2-matcher-extra" % "4.20.0",
       "org.scala-lang.modules" %% "scala-xml" % "2.1.0"
