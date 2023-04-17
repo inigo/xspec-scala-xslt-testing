@@ -1,10 +1,10 @@
 package net.surguy.xspec
 
-import org.specs2.mutable.Specification
-import org.specs2.specification.Fragments
-import java.io.File
-
 import org.specs2.matcher.XmlMatchers
+import org.specs2.mutable.Specification
+import org.specs2.specification.core.{Fragments, SpecStructure}
+
+import java.io.File
 
 /**
  * A trait for XSpec tests - extend and implement the xSpec method.
@@ -14,22 +14,38 @@ import org.specs2.matcher.XmlMatchers
 abstract class XspecSpecification extends Specification with XmlMatchers {
   def xSpec: File
 
-  override def is: Fragments = {
+  override def is: SpecStructure = {
     try {
       val results = XspecRunner.runTest(xSpec)
-      results.allTests.foreach{ t =>
-        exampleFactory.newExample( t.label , {
-          if (!t.success && t.expect.length!=0) t.expect must beEqualToIgnoringSpace(t.actual)
-          t.success must beTrue
-        })
-      }
-      specFragments
+      Fragments(
+        results.allTests.map { test =>
+          test.label in {
+            try {
+              if (!test.success && test.expect.nonEmpty) {
+                test.expect must beEqualToIgnoringSpace(test.actual)
+              } else {
+                test.success must beTrue
+              }
+            } catch {
+              case e: Exception =>
+                // Throwing the exception inside a test gives a nicer error message, including a stack trace
+                def doThrow(): Unit = {
+                  throw e
+                }
+
+                doThrow() must not(throwAn[Exception])
+            }
+          }
+        }: _*
+      )
     } catch {
-      case e:Exception =>
-        // Throwing the exception inside a test gives a nicer error message, including a stack trace
-        def doThrow() { throw e }
-        exampleFactory.newExample( "Loading the XSpec definition failed", { doThrow() must not(throwAn[Exception]) })
-        specFragments
+      case e: Exception =>
+        def doThrow(): Unit = {
+          throw e
+        }
+        "Loading the XSpec definition must succeed" in {
+          doThrow() must not(throwAn[Exception])
+        }
     }
   }
 }

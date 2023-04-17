@@ -1,7 +1,6 @@
 package net.surguy.xspec
 
 import java.io.File
-import org.specs2.SpecificationWithJUnit
 
 /**
  * An example of how to use the XspecSpecification trait.

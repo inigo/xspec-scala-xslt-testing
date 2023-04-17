@@ -1,7 +1,7 @@
 package net.surguy.xspec
 
-import collection.JavaConversions._
-import java.io.{IOException, File}
+import java.io.{File, IOException}
+import java.nio.file.Files
 
 /**
  * Utility methods - normally accessible via other libraries such as Guava, but this
@@ -12,16 +12,13 @@ import java.io.{IOException, File}
 private[xspec] object Utils {
 
   def createTempDir(): File = {
-    val baseDir = new File(System.getProperty("java.io.tmpdir"))
-    val dirName = "tempxspec_" + System.nanoTime() + "-" + math.random
-    val tempDir = new File(baseDir, dirName)
-    if (tempDir.mkdir()) tempDir else throw new IllegalStateException("Could not create temp directory at "+tempDir.getAbsolutePath)
+    Files.createTempDirectory("specs2-xspec").toFile
   }
 
-  def deleteRecursively(dir: File) {
+  def deleteRecursively(dir: File): Unit = {
     if (!dir.exists) return
-    if (dir.isDirectory) dir.listFiles().foreach(deleteRecursively)
-    if (!dir.delete()) throw new IOException("Unable to delete directory "+dir)
+    if (dir.isDirectory) Option(dir.listFiles()).foreach(_.foreach(deleteRecursively))
+    if (!dir.delete()) throw new IOException("Unable to delete directory " + dir)
   }
 
 }

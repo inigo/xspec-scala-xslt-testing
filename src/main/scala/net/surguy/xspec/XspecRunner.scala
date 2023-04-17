@@ -1,10 +1,11 @@
 package net.surguy.xspec
 
-import javax.xml.transform.stream.{StreamResult, StreamSource}
-import java.io.{FileNotFoundException, File, FileInputStream}
-import xml._
+import net.sf.saxon.TransformerFactoryImpl
+
+import java.io.{File, FileNotFoundException}
 import javax.xml.transform.Templates
-import net.sf.saxon.{TransformerFactoryImpl, Controller}
+import javax.xml.transform.stream.{StreamResult, StreamSource}
+import scala.xml._
 
 /**
  * Apply an XSpec test.
@@ -37,8 +38,8 @@ object XspecRunner {
       // The XSpec file itself specifies the stylesheet that it should be applied to, via the stylesheet attribute
       val tFactory = new TransformerFactoryImpl()
       tFactory.setURIResolver(new ClasspathUriResolver())
-      val transformer = tFactory.newTransformer(new StreamSource(xspecFile))
-      transformer.asInstanceOf[Controller].setInitialTemplate("{http://www.jenitennison.com/xslt/xspec}main")
+      val transformer: net.sf.saxon.jaxp.TransformerImpl = tFactory.newTransformer(new StreamSource(xspecFile)).asInstanceOf[net.sf.saxon.jaxp.TransformerImpl]
+      transformer.setInitialTemplate("{http://www.jenitennison.com/xslt/xspec}main")
 
       val xspecResults = new File(dir, "xspecResult.xml")
       transformer.transform(new StreamSource(xspecFile), new StreamResult(xspecResults))
