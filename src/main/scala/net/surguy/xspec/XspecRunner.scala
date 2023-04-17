@@ -2,8 +2,8 @@ package net.surguy.xspec
 
 import net.sf.saxon.TransformerFactoryImpl
 
-import java.io.{File, FileNotFoundException}
-import javax.xml.transform.Templates
+import java.io.{ByteArrayInputStream, ByteArrayOutputStream, File, FileNotFoundException}
+import javax.xml.transform.{Source, Templates}
 import javax.xml.transform.stream.{StreamResult, StreamSource}
 import scala.xml._
 
@@ -26,30 +26,28 @@ object XspecRunner {
     if (!specFile.exists()) {
       throw new FileNotFoundException("Cannot find XSpec file at " + specFile.getAbsolutePath)
     }
+    // XSpec is a two-stage transform, like Schematron.
+    // First it creates a XSpec stylesheet from the test file, then it calls templates in that stylesheet
+    // First, generate the XSpec stylesheet:
 
-    val dir = Utils.createTempDir()
-    try {
-      // XSpec is a two-stage transform, like Schematron.
-      // First it creates a XSpec stylesheet from the test file, then it calls templates in that stylesheet
+    val baos = new ByteArrayOutputStream()
+    xspecGenerator.newTransformer().transform(new StreamSource(specFile), new StreamResult(baos))
 
-      // First, generate the XSpec stylesheet:
-      val xspecFile = new File(dir, "xspec.xsl")
-      xspecGenerator.newTransformer().transform(new StreamSource(specFile), new StreamResult(xspecFile))
+    val xspecStylesheet = baos.toByteArray
 
-      // Then, call the initial template (this is using a Saxon-specific API, that isn't yet present in JAXP)
-      // The XSpec file itself specifies the stylesheet that it should be applied to, via the stylesheet attribute
-      val tFactory = new TransformerFactoryImpl()
-      tFactory.setURIResolver(new ClasspathUriResolver())
-      val transformer: net.sf.saxon.jaxp.TransformerImpl = tFactory.newTransformer(new StreamSource(xspecFile)).asInstanceOf[net.sf.saxon.jaxp.TransformerImpl]
-      transformer.setInitialTemplate("{http://www.jenitennison.com/xslt/xspec}main")
+    // Then, call the initial template (this is using a Saxon-specific API, that isn't yet present in JAXP)
+    // The XSpec file itself specifies the stylesheet that it should be applied to, via the stylesheet attribute
 
-      val xspecResults = new File(dir, "xspecResult.xml")
-      transformer.transform(new StreamSource(xspecFile), new StreamResult(xspecResults))
-      val xspecResult = XML.loadFile(xspecResults)
-      parseResults(xspecResult)
-    } finally {
-      Utils.deleteRecursively(dir)
-    }
+    val tFactory = new TransformerFactoryImpl()
+    tFactory.setURIResolver(new ClasspathUriResolver())
+    val transformer: net.sf.saxon.jaxp.TransformerImpl =
+      tFactory.newTransformer(new StreamSource(new ByteArrayInputStream(xspecStylesheet))).asInstanceOf[net.sf.saxon.jaxp.TransformerImpl]
+    transformer.setInitialTemplate("{http://www.jenitennison.com/xslt/xspec}main")
+
+    val xspecResults = new ByteArrayOutputStream()
+    transformer.transform(new StreamSource(new ByteArrayInputStream(xspecStylesheet)), new StreamResult(xspecResults))
+    val xspecResult = XML.load(new ByteArrayInputStream(xspecResults.toByteArray))
+    parseResults(xspecResult)
   }
 
   private def getTemplates: Templates = {
@@ -68,8 +66,8 @@ object XspecRunner {
   private def parseScenarios(elem: Node, labelSoFar: String): Seq[Scenario] = {
     for (scenarioNode <- elem \ "scenario";
          label <- scenarioNode \ "label";
-         scenarios = parseScenarios(scenarioNode, labelSoFar+" "+label.text);
-         result = parseResults(scenarioNode, labelSoFar+" "+label.text)) yield {
+         scenarios = parseScenarios(scenarioNode, labelSoFar + " " + label.text);
+         result = parseResults(scenarioNode, labelSoFar + " " + label.text)) yield {
       Scenario(label.text, scenarios, result)
     }
   }
@@ -80,9 +78,9 @@ object XspecRunner {
           label <- result \ "label";
           expect = result \ "expect";
           actual <- result \ "result") yield {
-      val expectChild = (expect \ "_").collect{ case e: Elem => e.copy( scope = TopScope ) }
-      val actualChild = (actual \ "_").collect{ case e: Elem => e.copy( scope = TopScope ) }
-      XspecTest((labelSoFar + " " + label.text).trim, success.text.toBoolean, expectChild , actualChild )
+      val expectChild = (expect \ "_").collect { case e: Elem => e.copy(scope = TopScope) }
+      val actualChild = (actual \ "_").collect { case e: Elem => e.copy(scope = TopScope) }
+      XspecTest((labelSoFar + " " + label.text).trim, success.text.toBoolean, expectChild, actualChild)
     }).headOption
   }
 
