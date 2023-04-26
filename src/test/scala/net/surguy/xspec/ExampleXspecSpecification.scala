@@ -11,6 +11,7 @@ import java.io.File
  */
 class ExampleXspecSpecification extends XspecSpecification {
 
-  override def xSpec: File = new File("src/test/resources")
+  // Switch this to exampleXspec to see examples of failures
+  override def xSpec: File = new File("src/test/resources/workingXspec")
 
 }
