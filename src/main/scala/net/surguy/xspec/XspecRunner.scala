@@ -76,7 +76,7 @@ object XspecRunner {
           success <- result \ "@successful";
           label <- result \ "label";
           expect = result \ "expect";
-          actual <- result \ "result") yield {
+          actual = result \ "result") yield {
       val expectChild = (expect \ "_").collect { case e: Elem => e.copy(scope = TopScope) }
       val actualChild = (actual \ "_").collect { case e: Elem => e.copy(scope = TopScope) }
       XspecTest((labelSoFar + " " + label.text).trim, success.text.toBoolean, expectChild, actualChild)
