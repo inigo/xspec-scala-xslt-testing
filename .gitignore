@@ -4,6 +4,7 @@ project/boot
 project/build/target
 *.swp
 *~
+.bsp
 
 # IDEA configuration
 *.iml

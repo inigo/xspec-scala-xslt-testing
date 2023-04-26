@@ -1,7 +1,6 @@
 package net.surguy.xspec
 
 import java.io.File
-import org.specs2.SpecificationWithJUnit
 
 /**
  * An example of how to use the XspecSpecification trait.
@@ -12,6 +11,7 @@ import org.specs2.SpecificationWithJUnit
  */
 class ExampleXspecSpecification extends XspecSpecification {
 
-  override def xSpec: File = new File(new File("src/test/resources"), "exampleXspec/test.xspec")
+  // Switch this to exampleXspec to see examples of failures
+  override def xSpec: File = new File("src/test/resources/workingXspec")
 
 }

@@ -1,13 +1,14 @@
 package net.surguy.xspec
 
+import org.specs2.mutable.Specification
+
 import java.io.File
-import xml.XML
-import org.specs2.mutable.SpecificationWithJUnit
+import scala.xml.XML
 
 /**
  * @author Inigo Surguy
  */
-class XspecSpecificationTest extends SpecificationWithJUnit {
+class XspecSpecificationTest extends Specification {
 
   private def getFile(fileName: String) = new File(new File("src/test/resources"), fileName)
   
